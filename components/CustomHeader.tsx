@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   overlay: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#5b0a5aaa", // 👈 color semitransparente sobre la imagen
+    backgroundColor: "#5b0a5a87", // 👈 color semitransparente sobre la imagen
     paddingVertical: 75,
     paddingHorizontal: 16,
   },
