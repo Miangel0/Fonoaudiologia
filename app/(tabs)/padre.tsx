@@ -36,12 +36,13 @@ export default function Padre() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
   title: {
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#5B0A59", // morado
-    textAlign: "center",
-    marginVertical: 15,
+    textAlign: "left",
+    marginVertical: 20,
     textDecorationLine: "underline",
+    marginHorizontal: 16,
   },
   sectionTitle: {
     fontSize: 16,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginTop: 15,
     marginBottom: 8,
-    color: "#333",
+    color: "#613260ff",
   },
   list: {
     marginHorizontal: 20,

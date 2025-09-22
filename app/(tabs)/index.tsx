@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   menuTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#5B0A59", // morado
     marginVertical: 20,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    fontSize: 16,
-    color: "#333",
+    fontSize: 18,
+    color: "#646464ff",
   },
 });

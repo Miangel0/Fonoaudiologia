@@ -84,11 +84,12 @@ export default function ExtraccionLeche() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
   title: {
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#333",
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 15,
+    marginHorizontal: 16,
   },
   highlight: {
     color: "#5B0A59",

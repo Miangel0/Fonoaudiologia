@@ -57,88 +57,43 @@ export default function Podcast() {
     <ScrollView style={styles.container}>
       <CustomHeader />
 
-      <View style={styles.content}>
-        <Text style={styles.title}>Podcast experiencias en madres universitarias</Text>
+      {/* Título principal con el mismo estilo que las otras pantallas */}
+      <Text style={styles.title}>
+        <Text style={styles.highlight}>Podcast experiencias en madres universitarias</Text>
+      </Text>
 
-        {/* Podcast 1 */}
-        <ImageBackground
-          source={require("@/assets/imagenes/madreUno.jpg")}
-          style={styles.podcastCard}
-          imageStyle={{ borderRadius: 12 }}
-        >
-          <View style={styles.overlay}>
-            <Text style={styles.podcastTitle}>Podcasts 1</Text>
-            <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
-
-            {/* Controles */}
-            <TouchableOpacity
-              style={styles.playButton}
-              onPress={() =>
-                handlePlayPause(
-                  "podcast1",
-                  require("@/assets/audios/audio.mp3")
-                )
-              }
-            >
-              <Ionicons
-                name={isPlaying === "podcast1" ? "pause" : "play"}
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-
-            {/* Barra + tiempo */}
-            {isPlaying === "podcast1" && (
-              <View style={styles.sliderContainer}>
-                <Text style={styles.time}>{formatTime(position)}</Text>
-                <Slider
-                  style={{ flex: 1, marginHorizontal: 8 }}
-                  minimumValue={0}
-                  maximumValue={duration}
-                  value={position}
-                  onSlidingComplete={handleSeek}
-                  minimumTrackTintColor="#fff"
-                  maximumTrackTintColor="#aaa"
-                  thumbTintColor="#fff"
-                />
-                <Text style={styles.time}>{formatTime(duration - position)}</Text>
-              </View>
-            )}
-          </View>
-        </ImageBackground>
-
-        {/* Podcast 2 */}
-        <ImageBackground
+      {/* Podcast 1 */}
+      <ImageBackground
         source={require("@/assets/imagenes/madreUno.jpg")}
         style={styles.podcastCard}
         imageStyle={{ borderRadius: 12 }}
-        >
+      >
         <View style={styles.overlay}>
-            <Text style={styles.podcastTitle}>Podcasts 2</Text>
-            <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
+          <Text style={styles.podcastTitle}>Podcasts 1</Text>
+          <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
 
-            {/* Botón Play/Pause */}
-            <TouchableOpacity
+          {/* Controles */}
+          <TouchableOpacity
             style={styles.playButton}
             onPress={() =>
-                handlePlayPause(
-                "podcast2",
+              handlePlayPause(
+                "podcast1",
                 require("@/assets/audios/audio.mp3")
-                )
+              )
             }
-            >
+          >
             <Ionicons
-                name={isPlaying === "podcast2" ? "pause" : "play"}
-                size={28}
-                color="white"
+              name={isPlaying === "podcast1" ? "pause" : "play"}
+              size={28}
+              color="white"
             />
-            </TouchableOpacity>
+          </TouchableOpacity>
 
-            {/* Barra + tiempo (misma lógica que podcast1) */}
-            {isPlaying === "podcast2" && (
+          {/* Barra + tiempo */}
+          {isPlaying === "podcast1" && (
             <View style={styles.sliderContainer}>
-                <Text style={styles.time}>{formatTime(position)}</Text>
-                <Slider
+              <Text style={styles.time}>{formatTime(position)}</Text>
+              <Slider
                 style={{ flex: 1, marginHorizontal: 8 }}
                 minimumValue={0}
                 maximumValue={duration}
@@ -147,31 +102,83 @@ export default function Podcast() {
                 minimumTrackTintColor="#fff"
                 maximumTrackTintColor="#aaa"
                 thumbTintColor="#fff"
-                />
-                <Text style={styles.time}>{formatTime(duration - position)}</Text>
+              />
+              <Text style={styles.time}>{formatTime(duration - position)}</Text>
             </View>
-            )}
+          )}
         </View>
-        </ImageBackground>
+      </ImageBackground>
 
-      </View>
+      {/* Podcast 2 */}
+      <ImageBackground
+        source={require("@/assets/imagenes/madreUno.jpg")}
+        style={styles.podcastCard}
+        imageStyle={{ borderRadius: 12 }}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.podcastTitle}>Podcasts 2</Text>
+          <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
+
+          {/* Botón Play/Pause */}
+          <TouchableOpacity
+            style={styles.playButton}
+            onPress={() =>
+              handlePlayPause(
+                "podcast2",
+                require("@/assets/audios/audio.mp3")
+              )
+            }
+          >
+            <Ionicons
+              name={isPlaying === "podcast2" ? "pause" : "play"}
+              size={28}
+              color="white"
+            />
+          </TouchableOpacity>
+
+          {/* Barra + tiempo (misma lógica que podcast1) */}
+          {isPlaying === "podcast2" && (
+            <View style={styles.sliderContainer}>
+              <Text style={styles.time}>{formatTime(position)}</Text>
+              <Slider
+                style={{ flex: 1, marginHorizontal: 8 }}
+                minimumValue={0}
+                maximumValue={duration}
+                value={position}
+                onSlidingComplete={handleSeek}
+                minimumTrackTintColor="#fff"
+                maximumTrackTintColor="#aaa"
+                thumbTintColor="#fff"
+              />
+              <Text style={styles.time}>{formatTime(duration - position)}</Text>
+            </View>
+          )}
+        </View>
+      </ImageBackground>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8f8f8" },
-  content: { paddingHorizontal: 12, paddingTop: 10, paddingBottom: 20 },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#fff" 
+  },
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#5B0A59",
     textAlign: "center",
-    marginBottom: 15,
+    marginVertical: 15,
+    color: "#333",
+  },
+  highlight: {
+    color: "#5B0A59",
+    textDecorationLine: "underline",
   },
   podcastCard: {
     height: 150,
     marginBottom: 18,
+    marginHorizontal: 15,
     justifyContent: "flex-end",
     borderRadius: 12,
     overflow: "hidden",
