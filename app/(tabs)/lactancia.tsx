@@ -98,9 +98,9 @@ export default function Lactancia() {
           onPress={() => toggleSection("consulta")}
         >
           <Text style={styles.paragraph}>
-            Información y link a video:{"\n"}
-            <Text style={styles.link} onPress={() => openLink("https://www.youtube.com/watch?v=dQw4w9WgXcQ")}>
-              Ver video
+            Link a más información:{"\n"}
+            <Text style={styles.link} onPress={() => openLink("https://e-lactancia.org/")}>
+              Ver info
             </Text>
           </Text>
         </AccordionSection>

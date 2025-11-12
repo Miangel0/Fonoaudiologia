@@ -11,7 +11,7 @@ export default function Index() {
       <CustomHeader />
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.menuTitle}>MENU</Text>
+        <Text style={styles.menuTitle}>MENÚ</Text>
 
         <View style={styles.menu}>
           <TouchableOpacity

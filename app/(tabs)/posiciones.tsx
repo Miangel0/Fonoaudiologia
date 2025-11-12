@@ -53,7 +53,6 @@ export default function Posiciones() {
       <View style={styles.section}>
         <Text style={styles.subtitle}>Agarre</Text>
         <Text style={styles.paragraph}>
-          <Text style={styles.videoTitle}>Video 1</Text>
           {"\n"}
           El video narrará el paso a paso de cómo debe ser la  
           succión del lactante durante la alimentación, teniendo  
@@ -113,7 +112,6 @@ export default function Posiciones() {
       <View style={styles.section}>
         <Text style={styles.subtitle}>Posturas para la lactancia materna</Text>
         <Text style={styles.paragraph}>
-          <Text style={styles.videoTitle}>Video 2</Text>
           {"\n"}
           El video narrará el paso a paso de cómo se debe realizar  
           la posición que se puede adoptar durante el proceso de  

@@ -69,8 +69,8 @@ export default function Podcast() {
         imageStyle={{ borderRadius: 12 }}
       >
         <View style={styles.overlay}>
-          <Text style={styles.podcastTitle}>Podcasts 1</Text>
-          <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
+          <Text style={styles.podcastTitle}>Podcasts</Text>
+          <Text style={styles.podcastDescription}>Ser mamá, ser real</Text>
 
           {/* Controles */}
           <TouchableOpacity
@@ -116,8 +116,8 @@ export default function Podcast() {
         imageStyle={{ borderRadius: 12 }}
       >
         <View style={styles.overlay}>
-          <Text style={styles.podcastTitle}>Podcasts 2</Text>
-          <Text style={styles.podcastDescription}>Breve descripción sobre el podcast</Text>
+          <Text style={styles.podcastTitle}>Podcasts</Text>
+          <Text style={styles.podcastDescription}>Lactando con papá</Text>
 
           {/* Botón Play/Pause */}
           <TouchableOpacity
@@ -155,6 +155,54 @@ export default function Podcast() {
           )}
         </View>
       </ImageBackground>
+
+      {/* Podcast 3 */}
+            <ImageBackground
+              source={require("@/assets/imagenes/madreUno.jpg")}
+              style={styles.podcastCard}
+              imageStyle={{ borderRadius: 12 }}
+            >
+              <View style={styles.overlay}>
+                <Text style={styles.podcastTitle}>Podcasts</Text>
+                <Text style={styles.podcastDescription}>Brindando más que leche</Text>
+
+                {/* Botón Play/Pause */}
+                <TouchableOpacity
+                  style={styles.playButton}
+                  onPress={() =>
+                    handlePlayPause(
+                      "podcast3",
+                      require("@/assets/audios/audio.mp3")
+                    )
+                  }
+                >
+                  <Ionicons
+                    name={isPlaying === "podcast3" ? "pause" : "play"}
+                    size={28}
+                    color="white"
+                  />
+                </TouchableOpacity>
+
+                {/* Barra + tiempo (misma lógica que podcast1) */}
+                {isPlaying === "podcast3" && (
+                  <View style={styles.sliderContainer}>
+                    <Text style={styles.time}>{formatTime(position)}</Text>
+                    <Slider
+                      style={{ flex: 1, marginHorizontal: 8 }}
+                      minimumValue={0}
+                      maximumValue={duration}
+                      value={position}
+                      onSlidingComplete={handleSeek}
+                      minimumTrackTintColor="#fff"
+                      maximumTrackTintColor="#aaa"
+                      thumbTintColor="#fff"
+                    />
+                    <Text style={styles.time}>{formatTime(duration - position)}</Text>
+                  </View>
+                )}
+              </View>
+            </ImageBackground>
+
     </ScrollView>
   );
 }
@@ -176,7 +224,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   podcastCard: {
-    height: 150,
+    height: 180,
     marginBottom: 18,
     marginHorizontal: 15,
     justifyContent: "flex-end",
@@ -184,18 +232,18 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   overlay: {
-    backgroundColor: "rgba(91, 10, 90, 0.22)",
-    padding: 22,
+    backgroundColor: "rgba(91, 10, 90, 0.28)",
+    padding: 40,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
   },
   podcastTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "white",
   },
   podcastDescription: {
-    fontSize: 14,
+    fontSize: 15,
     color: "white",
     marginBottom: 8,
   },

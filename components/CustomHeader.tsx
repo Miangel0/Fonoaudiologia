@@ -7,13 +7,13 @@ export default function CustomHeader() {
 
   return (
     <ImageBackground
-      source={require("../assets/imagenes/madreUno.jpg")} // 👈 Fondo del header
+      source={require("../assets/imagenes/madreUno.jpg")} 
       style={styles.background}
       resizeMode="cover"
     >
       <TouchableOpacity style={styles.overlay} onPress={() => router.push("/")}>
         <Image
-          source={require("../assets/imagenes/boton-de-inicio.png")} // 👈 Icono de casa
+          source={require("../assets/imagenes/boton-de-inicio.png")} 
           style={styles.icon}
         />
 
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   overlay: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#5b0a5a87", // 👈 color semitransparente sobre la imagen
+    backgroundColor: "#5b0a5a87", 
     paddingVertical: 75,
     paddingHorizontal: 16,
   },
@@ -45,17 +45,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    tintColor: "white", // 👈 blanco como en el diseño
+    tintColor: "white", 
   },
   separator: {
-    width: 6,              // grosor de la línea
-    height: 40,            // altura de la línea
+    width: 6,              
+    height: 40,           
     backgroundColor: "white",
-    marginHorizontal: 10,  // espacio entre icono y texto
+    marginHorizontal: 10,  
   },
   title: {
     color: "white",
-    fontSize: 27,
+    fontSize: 20,
     fontWeight: "bold",
     lineHeight: 22,
   },
