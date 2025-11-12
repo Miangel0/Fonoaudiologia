@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "fono",
+    "name": "Lactancia",
     "slug": "fono",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/imagenes/logo.jpeg",
-    "scheme": "fono",
+    "scheme": "lactancia",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/imagenes/logo.jpeg"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.miangel01.fono"
     },
     "web": {
       "output": "static",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3583de74-45c1-4939-a2f8-184bc1c1263a"
+      }
     }
   }
 }
