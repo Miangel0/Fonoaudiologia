@@ -44,16 +44,17 @@ export default function ExtraccionLeche() {
       {/* Contenedor del Video */}
       <View style={styles.videoContainer}>
         <Video
-        ref={videoRef}
-        source={require("@/assets/videos/Lactancia1.mp4")}
-        style={styles.video}
-        useNativeControls={true}   // ✅ muestra play, pausa, fullscreen
-        resizeMode={ResizeMode.CONTAIN} // ✅ mantiene proporciones sin cortar
-        shouldPlay={true}   // ✅ arranca reproduciendo automáticamente
-        isLooping={true}    // ✅ se repite en bucle
-        onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
-      />
-
+          ref={videoRef}
+          source={{
+            uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762931305/Lactancia1_rasdsr.mp4",
+          }}
+          style={styles.video}
+          useNativeControls={true}   // ✅ muestra play, pausa, fullscreen
+          resizeMode={ResizeMode.CONTAIN} // ✅ mantiene proporciones sin cortar
+          shouldPlay={true}   // ✅ arranca reproduciendo automáticamente
+          isLooping={true}    // ✅ se repite en bucle
+          onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
+        />
 
         {/* Controles personalizados flotantes */}
         <View style={styles.controlsOverlay}>

@@ -52,37 +52,6 @@ export default function Posiciones() {
       {/* Subtítulo */}
       <View style={styles.section}>
         <Text style={styles.subtitle}>Agarre</Text>
-        <Text style={styles.paragraph}>
-          {"\n"}
-          El video narrará el paso a paso de cómo debe ser la  
-          succión del lactante durante la alimentación, teniendo  
-          presente las características de la misma.
-        </Text>
-      </View>
-
-      {/* Video 1 - Agarre */}
-      <View style={styles.videoContainer}>
-        <Video
-          ref={videoRef1}
-          source={require("@/assets/videos/Lactancia1.mp4")}
-          style={styles.video}
-          useNativeControls={false}
-          resizeMode={ResizeMode.CONTAIN}
-          isLooping={false}
-          shouldPlay={false}
-          onPlaybackStatusUpdate={(status) => handlePlaybackStatusUpdate(status, 1)}
-        />
-        
-        {/* Controles personalizados flotantes para Video 1 */}
-        <View style={styles.controlsOverlay}>
-          <TouchableOpacity style={styles.controlButton} onPress={() => togglePlayPause(1)}>
-            <Ionicons name={isPlaying1 ? "pause" : "play"} size={28} color="white" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.controlButton} onPress={() => toggleFullscreen(1)}>
-            <Ionicons name="expand" size={28} color="white" />
-          </TouchableOpacity>
-        </View>
       </View>
 
       {/* Texto durante la succión */}
@@ -143,7 +112,7 @@ export default function Posiciones() {
       <View style={styles.videoContainer}>
         <Video
           ref={videoRef2}
-          source={require("@/assets/videos/Lactancia1.mp4")}
+          source={{ uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762931813/Lactancia2_lyu7mo.mp4" }}
           style={styles.video}
           useNativeControls={false}
           resizeMode={ResizeMode.CONTAIN}

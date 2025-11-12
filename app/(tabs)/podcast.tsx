@@ -78,7 +78,7 @@ export default function Podcast() {
             onPress={() =>
               handlePlayPause(
                 "podcast1",
-                require("@/assets/audios/audio.mp3")
+                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929396/Audio1_tcphjt.mp3" }
               )
             }
           >
@@ -125,7 +125,7 @@ export default function Podcast() {
             onPress={() =>
               handlePlayPause(
                 "podcast2",
-                require("@/assets/audios/audio.mp3")
+                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929403/Audio2_permxt.mp3" }
               )
             }
           >
@@ -157,52 +157,51 @@ export default function Podcast() {
       </ImageBackground>
 
       {/* Podcast 3 */}
-            <ImageBackground
-              source={require("@/assets/imagenes/madreUno.jpg")}
-              style={styles.podcastCard}
-              imageStyle={{ borderRadius: 12 }}
-            >
-              <View style={styles.overlay}>
-                <Text style={styles.podcastTitle}>Podcasts</Text>
-                <Text style={styles.podcastDescription}>Brindando más que leche</Text>
+      <ImageBackground
+        source={require("@/assets/imagenes/madreUno.jpg")}
+        style={styles.podcastCard}
+        imageStyle={{ borderRadius: 12 }}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.podcastTitle}>Podcasts</Text>
+          <Text style={styles.podcastDescription}>Brindando más que leche</Text>
 
-                {/* Botón Play/Pause */}
-                <TouchableOpacity
-                  style={styles.playButton}
-                  onPress={() =>
-                    handlePlayPause(
-                      "podcast3",
-                      require("@/assets/audios/audio.mp3")
-                    )
-                  }
-                >
-                  <Ionicons
-                    name={isPlaying === "podcast3" ? "pause" : "play"}
-                    size={28}
-                    color="white"
-                  />
-                </TouchableOpacity>
+          {/* Botón Play/Pause */}
+          <TouchableOpacity
+            style={styles.playButton}
+            onPress={() =>
+              handlePlayPause(
+                "podcast3",
+                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929395/Audio3_dkq4zo.mp3" }
+              )
+            }
+          >
+            <Ionicons
+              name={isPlaying === "podcast3" ? "pause" : "play"}
+              size={28}
+              color="white"
+            />
+          </TouchableOpacity>
 
-                {/* Barra + tiempo (misma lógica que podcast1) */}
-                {isPlaying === "podcast3" && (
-                  <View style={styles.sliderContainer}>
-                    <Text style={styles.time}>{formatTime(position)}</Text>
-                    <Slider
-                      style={{ flex: 1, marginHorizontal: 8 }}
-                      minimumValue={0}
-                      maximumValue={duration}
-                      value={position}
-                      onSlidingComplete={handleSeek}
-                      minimumTrackTintColor="#fff"
-                      maximumTrackTintColor="#aaa"
-                      thumbTintColor="#fff"
-                    />
-                    <Text style={styles.time}>{formatTime(duration - position)}</Text>
-                  </View>
-                )}
-              </View>
-            </ImageBackground>
-
+          {/* Barra + tiempo (misma lógica que podcast1) */}
+          {isPlaying === "podcast3" && (
+            <View style={styles.sliderContainer}>
+              <Text style={styles.time}>{formatTime(position)}</Text>
+              <Slider
+                style={{ flex: 1, marginHorizontal: 8 }}
+                minimumValue={0}
+                maximumValue={duration}
+                value={position}
+                onSlidingComplete={handleSeek}
+                minimumTrackTintColor="#fff"
+                maximumTrackTintColor="#aaa"
+                thumbTintColor="#fff"
+              />
+              <Text style={styles.time}>{formatTime(duration - position)}</Text>
+            </View>
+          )}
+        </View>
+      </ImageBackground>
     </ScrollView>
   );
 }
