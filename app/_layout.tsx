@@ -8,7 +8,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import AuthProvider from '@/providers/AuthProvider';
 
-// Evita que la pantalla inicial se oculte hasta que las fuentes estén cargadas.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -29,15 +28,23 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <GestureHandlerRootView>
-        <Stack>
-          <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerShown: false,   // 👈 OCULTA EL HEADER PARA TODAS LAS PANTALLAS
+          }}
+        >
+          <Stack.Screen name="(tabs)/index" />
           <Stack.Screen 
-          name="(auth)/signin/index" options={{ headerShown: false, animation: "ios_from_right", gestureEnabled:false }} />
+            name="(auth)/signin/index" 
+            options={{ animation: "ios_from_right", gestureEnabled:false }} 
+          />
           <Stack.Screen 
-          name="(auth)/signup/index" options={{ headerShown: false, animation: "ios_from_right", gestureEnabled:false }} />
+            name="(auth)/signup/index" 
+            options={{ animation: "ios_from_right", gestureEnabled:false }} 
+          />
           <Stack.Screen name="+not-found" />
           <StatusBar style="dark" />
-        </Stack> 
+        </Stack>
       </GestureHandlerRootView>
     </AuthProvider>
   );

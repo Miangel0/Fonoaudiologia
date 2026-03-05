@@ -1,36 +1,42 @@
 {
   "expo": {
-    "name": "fono",
+    "name": "Lapptemos",
     "slug": "fono",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imagenes/logo.jpeg",
-    "scheme": "fono",
+    "icon": "./assets/imagenes/Logo.png",
+    "scheme": "lactancia",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mari0208.fono",
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/imagenes/logo.jpeg",
-        "backgroundImage": "./assets/imagenes/logo.jpeg",
-        "monochromeImage": "./assets/imagenes/logo.jpeg"
+        "foregroundImage": "./assets/imagenes/Logo.png",
+        "backgroundImage": "./assets/imagenes/Logo.png",
+        "monochromeImage": "./assets/imagenes/Logo.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.mari0208.lactancia"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/imagenes/logo.jpeg"
+      "favicon": "./assets/imagenes/Logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/imagenes/Logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
@@ -44,6 +50,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "33f87eeb-a6fa-4d65-99b6-9a2672fd5d95"
+      }
+    },
+    "owner": "mariana1031"
   }
 }

@@ -52,7 +52,7 @@ export default function SignIn() {
       }
 
       // ✅ Navegar al home (ajusta la ruta a la que quieras ir)
-      router.replace('/(tabs)/index' as any);
+      router.replace('/' as any);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error inesperado');
     } finally {
