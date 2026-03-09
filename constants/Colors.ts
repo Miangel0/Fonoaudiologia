@@ -1,53 +1,46 @@
 // constants/Colors.ts
-export const Colors = {
-  // Colores principales para lactancia materna
-  primary: '#E91E63', // Rosa maternal
+type ColorScheme = 'light' | 'dark';
+
+const COMMON_COLORS = {
+  primary: '#E91E63',
   primaryDark: '#C2185B',
   primaryLight: '#F8BBD9',
-  
-  // Colores secundarios
-  secondary: '#2E8B57', // Verde natural
+  secondary: '#2E8B57',
   secondaryDark: '#1F5F3F',
   secondaryLight: '#A8D8BC',
-  
-  // Colores de la UI
-  background: '#FFFFFF',
-  surface: '#F5F5F5',
-  card: '#FFFFFF',
-  
-  // Colores de texto
-  text: '#212121',
-  textSecondary: '#666666',
-  textLight: '#999999',
-  placeholder: '#BDBDBD',
-  
-  // Colores de estado
   success: '#4CAF50',
   warning: '#FF9800',
   error: '#F44336',
   info: '#2196F3',
-  
-  // Colores neutros
   white: '#FFFFFF',
   black: '#000000',
-  gray: '#666666',
-  lightGray: '#E0E0E0',
-  darkGray: '#424242',
-  
-  // Colores específicos para tabs
-  tabActive: '#E91E63',
-  tabInactive: '#999999',
-  tabBackground: '#FFFFFF',
-  
-  // Colores para header
-  headerBackground: '#E91E63',
-  headerText: '#FFFFFF',
-  
-  // Colores para botones
-  buttonPrimary: '#E91E63',
-  buttonSecondary: '#2E8B57',
-  buttonDisabled: '#BDBDBD',
-  
+};
+
+export const Colors: Record<ColorScheme, any> = {
+  light: {
+    tint: '#E91E63',
+    tabIconDefault: '#999999',
+    text: '#212121',
+    textSecondary: '#666666',
+    textLight: '#999999',
+    background: '#FFFFFF',
+    surface: '#F5F5F5',
+    card: '#FFFFFF',
+    border: '#E0E0E0',
+    ...COMMON_COLORS,
+  },
+  dark: {
+    tint: '#E91E63',
+    tabIconDefault: '#CCCCCC',
+    text: '#FFFFFF',
+    textSecondary: '#CCCCCC',
+    textLight: '#999999',
+    background: '#121212',
+    surface: '#1E1E1E',
+    card: '#242424',
+    border: '#333333',
+    ...COMMON_COLORS,
+  },
 } as const;
 
 // Tipo para autocompletar colores

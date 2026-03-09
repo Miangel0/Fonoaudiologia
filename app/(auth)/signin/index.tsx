@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   View,
@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase'; // 👈 asegúrate de tenerlo importado
+import { useAuth } from '@/providers/AuthProvider';
 
 const signInSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -27,6 +28,13 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter(); // 👈 para navegar después del login
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (session) {
+      router.replace('/(tabs)');
+    }
+  }, [session, router]);
 
   const {
     control,
@@ -51,8 +59,8 @@ export default function SignIn() {
         return;
       }
 
-      // ✅ Navegar al home (ajusta la ruta a la que quieras ir)
-      router.replace('/' as any);
+      // ✅ Navegar a tabs (el AuthProvider también lo redirigirá automáticamente)
+      router.replace('/(tabs)');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error inesperado');
     } finally {

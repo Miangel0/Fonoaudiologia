@@ -16,7 +16,7 @@ export default function Index() {
   // ✅ Cierre de sesión REAL
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.replace("/signin");
+    router.replace("/(auth)/signin");
   };
 
   // 🔥 ELIMINAR CUENTA (Apple obligatorio)
@@ -50,7 +50,7 @@ export default function Index() {
               );
 
               await supabase.auth.signOut();
-              router.replace("/signin");
+              router.replace("/(auth)/signin");
             } catch (error) {
               Alert.alert(
                 "Error",

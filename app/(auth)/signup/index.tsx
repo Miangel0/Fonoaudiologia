@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import {
@@ -12,13 +12,15 @@ import {
 } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { useAuth } from '@/providers/AuthProvider';
 
 // 📌 Esquema para datos personales (campos opcionales)
 const personalSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
 
-  age: z.string().regex(/^\d+$/, 'Edad inválida'),
+  age: z.coerce.number()
+    .min(18, 'Debes tener al menos 18 años'),
 
   city: z
     .string()
@@ -61,6 +63,14 @@ export default function SignUp() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (session) {
+      router.replace('/(tabs)');
+    }
+  }, [session, router]);
 
   const personalForm = useForm({
     resolver: zodResolver(personalSchema),
@@ -150,7 +160,7 @@ export default function SignUp() {
                   placeholderTextColor="#777"
                   keyboardType="numeric"
                   onChangeText={onChange}
-                  value={value}
+                  value={String(value)}
                 />
               )}
             />
