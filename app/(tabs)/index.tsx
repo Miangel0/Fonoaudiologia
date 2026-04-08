@@ -33,14 +33,15 @@ export default function Index() {
             try {
               const { data } = await supabase.auth.getSession();
               const accessToken = data.session?.access_token;
+              const baseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 
-              if (!accessToken) {
+              if (!accessToken || !baseUrl) {
                 Alert.alert("Error", "No se pudo validar la sesión.");
                 return;
               }
 
               await fetch(
-                `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/delete-account`,
+                `${baseUrl}/functions/v1/delete-account`,
                 {
                   method: "POST",
                   headers: {

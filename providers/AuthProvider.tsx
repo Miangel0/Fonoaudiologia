@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext} from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type AuthData = {
     loading: boolean;
@@ -24,6 +25,18 @@ export default function AuthProvider(props: Props){
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        async function clearCorruptedSupabaseSession() {
+            try {
+                const allKeys = await AsyncStorage.getAllKeys();
+                const sbAuthKeys = allKeys.filter((key) => key.includes("-auth-token"));
+                if (sbAuthKeys.length > 0) {
+                    await AsyncStorage.multiRemove(sbAuthKeys);
+                }
+            } catch (storageError) {
+                console.error("Error clearing corrupted auth storage:", storageError);
+            }
+        }
+
         async function fetchSession(){
             try {
                 const { error, data } = await supabase.auth.getSession();
@@ -38,8 +51,18 @@ export default function AuthProvider(props: Props){
                 }
             } catch (error) {
                 console.error('Error fetching session:', error);
-                setSession(null);
-                setUser(null);
+                await clearCorruptedSupabaseSession();
+                try {
+                    // Retry once after removing potentially corrupted persisted auth data.
+                    const { error: retryError, data: retryData } = await supabase.auth.getSession();
+                    if (retryError) throw retryError;
+                    setSession(retryData.session ?? null);
+                    setUser(retryData.session?.user ?? null);
+                } catch (retryError) {
+                    console.error("Error fetching session after storage cleanup:", retryError);
+                    setSession(null);
+                    setUser(null);
+                }
             } finally {
                 setLoading(false);
             }

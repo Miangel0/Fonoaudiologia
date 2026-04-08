@@ -1,14 +1,12 @@
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { router } from 'expo-router';
 
-import AuthProvider from '@/providers/AuthProvider';
-import { useAuth } from '@/providers/AuthProvider';
+import AuthProvider, { useAuth } from '@/providers/AuthProvider';
 
 SplashScreen.preventAutoHideAsync();
 
