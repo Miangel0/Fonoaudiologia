@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   View,
@@ -7,15 +7,20 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Image
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useRouter } from 'expo-router';
-import { supabase } from '@/lib/supabase'; // 👈 asegúrate de tenerlo importado
-import { useAuth } from '@/providers/AuthProvider';
+import { Link } from 'expo-router';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import ContentWidth from '@/components/ContentWidth';
+import { getContentWidth } from '@/constants/layout';
 
 const signInSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -24,17 +29,13 @@ const signInSchema = z.object({
 
 type SignInForm = z.infer<typeof signInSchema>;
 
+const MORADO = '#A348B0';
+
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // 👈 para navegar después del login
-  const { session } = useAuth();
-
-  useEffect(() => {
-    if (session) {
-      router.replace('/(tabs)');
-    }
-  }, [session, router]);
+  const { width, height } = useWindowDimensions();
+  const logoSize = Math.min(width * 0.45, 220, height * 0.25);
 
   const {
     control,
@@ -45,22 +46,23 @@ export default function SignIn() {
   });
 
   const onSubmit = async (data: SignInForm) => {
+    if (!isSupabaseConfigured) {
+      setError('Configuración del servidor incompleta. Contacta al soporte.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      if (error) {
-        setError(error.message);
-        return;
+      if (signInError) {
+        setError(signInError.message);
       }
-
-      // ✅ Navegar a tabs (el AuthProvider también lo redirigirá automáticamente)
-      router.replace('/(tabs)');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error inesperado');
     } finally {
@@ -70,100 +72,115 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logo */}
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('@/assets/imagenes/logo.jpeg')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Email */}
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.inputContainer}>
-            <View style={styles.iconBox}>
-              <Ionicons name="person-outline" size={20} color="#fff" />
-            </View>
-            <TextInput
-              placeholder="Correo electrónico"
-              placeholderTextColor="#8b8b8bff"
-              style={styles.input}
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="none"
-              keyboardType="email-address"
-            />
-          </View>
-        )}
-      />
-      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
-
-      {/* Password */}
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.inputContainer}>
-            <View style={styles.iconBox}>
-              <Ionicons name="lock-closed-outline" size={20} color="#fff" />
-            </View>
-            <TextInput
-              placeholder="Contraseña"
-              placeholderTextColor="#8b8b8bff"
-              secureTextEntry
-              style={styles.input}
-              value={value}
-              onChangeText={onChange}
-            />
-          </View>
-        )}
-      />
-      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-
-      {/* Mensaje de error de Supabase */}
-      {error && <Text style={styles.error}>{error}</Text>}
-
-      {/* Botón */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit(onSubmit)}
-        disabled={loading}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Iniciar Sesión</Text>}
-      </TouchableOpacity>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scroll,
+            { paddingHorizontal: Math.max(16, (width - getContentWidth(width)) / 2) },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <ContentWidth>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require('@/assets/imagenes/logo.jpeg')}
+                style={{ width: logoSize, height: logoSize }}
+                resizeMode="contain"
+              />
+            </View>
 
-      {/* Registro */}
-      <Text style={styles.bottomText}>
-        ¿No tienes una cuenta?{' '}
-        <Link href="/signup" style={styles.linkText}>
-          Regístrate
-        </Link>
-      </Text>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <View style={styles.inputContainer}>
+                  <View style={styles.iconBox}>
+                    <Ionicons name="person-outline" size={20} color="#fff" />
+                  </View>
+                  <TextInput
+                    placeholder="Correo electrónico"
+                    placeholderTextColor="#8b8b8bff"
+                    style={styles.input}
+                    value={value}
+                    onChangeText={onChange}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                  />
+                </View>
+              )}
+            />
+            {errors.email && (
+              <Text style={styles.error}>{errors.email.message}</Text>
+            )}
+
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <View style={styles.inputContainer}>
+                  <View style={styles.iconBox}>
+                    <Ionicons name="lock-closed-outline" size={20} color="#fff" />
+                  </View>
+                  <TextInput
+                    placeholder="Contraseña"
+                    placeholderTextColor="#8b8b8bff"
+                    secureTextEntry
+                    style={styles.input}
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                </View>
+              )}
+            />
+            {errors.password && (
+              <Text style={styles.error}>{errors.password.message}</Text>
+            )}
+
+            {error && <Text style={styles.error}>{error}</Text>}
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmit(onSubmit)}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Iniciar Sesión</Text>
+              )}
+            </TouchableOpacity>
+
+            <Text style={styles.bottomText}>
+              ¿No tienes una cuenta?{' '}
+              <Link href="/signup" style={styles.linkText}>
+                Regístrate
+              </Link>
+            </Text>
+          </ContentWidth>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-const MORADO = '#A348B0';
-
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 25,
+  },
+  scroll: {
+    flexGrow: 1,
     justifyContent: 'center',
+    paddingVertical: 24,
   },
   logoContainer: {
     alignItems: 'center',
     marginBottom: 20,
-  },
-  logo: {
-    width: 260,
-    height: 260,
-    marginBottom: 10,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -201,7 +218,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: 5,
     textAlign: 'center',
   },
   button: {

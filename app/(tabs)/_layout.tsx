@@ -1,11 +1,15 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Platform, useWindowDimensions } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/Colors';
 
 export default function TabsLayout() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const labelSize = isTablet ? 11 : 12;
 
   return (
     <Tabs
@@ -13,6 +17,13 @@ export default function TabsLayout() {
         tabBarActiveTintColor: colors.tint,
         tabBarInactiveTintColor: colors.tabIconDefault,
         headerShown: false,
+        tabBarLabelStyle: {
+          fontSize: labelSize,
+        },
+        tabBarStyle: {
+          paddingBottom: Platform.OS === 'ios' ? 4 : 0,
+          minHeight: isTablet ? 56 : 49,
+        },
       }}
     >
       <Tabs.Screen
@@ -20,7 +31,7 @@ export default function TabsLayout() {
         options={{
           title: 'Inicio',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={28} color={color} />
+            <Ionicons name="home" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -29,7 +40,7 @@ export default function TabsLayout() {
         options={{
           title: 'Fonoaudiología',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="mic" size={28} color={color} />
+            <Ionicons name="mic" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -38,7 +49,7 @@ export default function TabsLayout() {
         options={{
           title: 'Lactancia',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="heart" size={28} color={color} />
+            <Ionicons name="heart" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -47,7 +58,7 @@ export default function TabsLayout() {
         options={{
           title: 'Posiciones',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="body" size={28} color={color} />
+            <Ionicons name="body" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -56,7 +67,7 @@ export default function TabsLayout() {
         options={{
           title: 'Padre',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={28} color={color} />
+            <Ionicons name="person" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -65,7 +76,7 @@ export default function TabsLayout() {
         options={{
           title: 'Podcast',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="headset" size={28} color={color} />
+            <Ionicons name="headset" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />
@@ -74,7 +85,7 @@ export default function TabsLayout() {
         options={{
           title: 'Universitarias',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="school" size={28} color={color} />
+            <Ionicons name="school" size={isTablet ? 24 : 28} color={color} />
           ),
         }}
       />

@@ -1,68 +1,64 @@
 import { useFonts } from 'expo-font';
-import { Stack, router } from 'expo-router';
+import {
+  Stack,
+  useRouter,
+  useSegments,
+  useRootNavigationState,
+} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import AuthProvider, { useAuth } from '@/providers/AuthProvider';
 
 SplashScreen.preventAutoHideAsync();
 
-// Root layout que maneja la navegación según autenticación
 function RootLayoutNav() {
   const { loading, session } = useAuth();
-  const [fontsLoaded] = useFonts({
+  const segments = useSegments();
+  const navigationState = useRootNavigationState();
+  const router = useRouter();
+  const [fontsLoaded, fontError] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  const navigatorReady = navigationState?.key != null;
+  const ready = (fontsLoaded || fontError) && !loading && navigatorReady;
+
   useEffect(() => {
-    if (fontsLoaded) {
+    if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, fontError]);
 
   useEffect(() => {
-    // Redirigir según estado de autenticación
-    if (!loading) {
-      if (session) {
-        // Usuario autenticado → Ir a tabs
-        router.replace('/(tabs)');
-      } else {
-        // Usuario no autenticado → Ir a signin
-        router.replace('/(auth)/signin');
-      }
+    if (!ready) return;
+
+    const inAuthGroup = segments[0] === '(auth)';
+    const inTabsGroup = segments[0] === '(tabs)';
+
+    if (session && (inAuthGroup || !inTabsGroup)) {
+      router.replace('/(tabs)');
+    } else if (!session && !inAuthGroup) {
+      router.replace('/signin');
     }
-  }, [session, loading]);
+  }, [ready, session, segments, router]);
 
-  if (!fontsLoaded || loading) {
-    return null; // Mostrar splash mientras carga
-  }
-
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen 
-        name="(auth)/signin/index" 
-        options={{ animation: "ios_from_right", gestureEnabled: false }} 
-      />
-      <Stack.Screen 
-        name="(auth)/signup/index" 
-        options={{ animation: "ios_from_right", gestureEnabled: false }} 
-      />
-    </Stack>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
 
-// Wrapper con AuthProvider
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar style="dark" />
-        <RootLayoutNav />
-      </GestureHandlerRootView>
-    </AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="dark" />
+          <RootLayoutNav />
+        </GestureHandlerRootView>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }

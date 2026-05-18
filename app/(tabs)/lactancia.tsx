@@ -1,5 +1,6 @@
 import { ScrollView, Text, StyleSheet, View, Linking, TouchableOpacity } from "react-native";
 import CustomHeader from "@/components/CustomHeader";
+import ContentWidth from "@/components/ContentWidth";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 
@@ -15,12 +16,10 @@ export default function Lactancia() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header sin afectar por padding */}
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <CustomHeader />
 
-      {/* Contenedor interno con padding */}
-      <View style={styles.content}>
+      <ContentWidth style={styles.content}>
         {/* Título principal con estilo de menú */}
         <Text style={styles.menuTitle}>Lactancia materna</Text>
 
@@ -118,7 +117,7 @@ export default function Lactancia() {
             </Text>
           </Text>
         </AccordionSection>
-      </View>
+      </ContentWidth>
     </ScrollView>
   );
 }
@@ -143,8 +142,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 24,
+  },
   content: {
-    paddingHorizontal: 16,
     paddingTop: 10,
     paddingBottom: 20,
   },

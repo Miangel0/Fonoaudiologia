@@ -1,11 +1,13 @@
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import CustomHeader from "@/components/CustomHeader";
+import ContentWidth from "@/components/ContentWidth";
 
 export default function Padre() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <CustomHeader />
 
+      <ContentWidth>
       <Text style={styles.title}>Padre lactante</Text>
 
       {/* Primera sección */}
@@ -29,33 +31,37 @@ export default function Padre() {
         </Text>
         <Text style={styles.bullet}>● Durante la alimentación, el padre puede ayudar en facilitar posturas y acomodación del lactante para un proceso exitoso.</Text>
       </View>
+      </ContentWidth>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 24,
+  },
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "#5B0A59", // morado
+    color: "#5B0A59",
     textAlign: "left",
     marginVertical: 20,
     textDecorationLine: "underline",
-    marginHorizontal: 16,
+    width: "100%",
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginHorizontal: 15,
     marginTop: 15,
     marginBottom: 8,
     color: "#613260ff",
   },
   list: {
-    marginHorizontal: 20,
     marginBottom: 10,
     gap: 10,
+    width: "100%",
   },
   bullet: {
     fontSize: 15,

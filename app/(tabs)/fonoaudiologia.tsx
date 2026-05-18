@@ -1,11 +1,13 @@
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import CustomHeader from "@/components/CustomHeader";
+import ContentWidth from "@/components/ContentWidth";
 
 export default function Fonoaudiologia() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <CustomHeader />
 
+      <ContentWidth>
       {/* Título principal */}
       <Text style={styles.title}>
         <Text style={styles.highlight}>Fonoaudiología y lactancia materna</Text>
@@ -49,6 +51,7 @@ export default function Fonoaudiologia() {
           lactancia.
         </Text>
       </View>
+      </ContentWidth>
     </ScrollView>
   );
 }
@@ -58,12 +61,15 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: "#fff" 
   },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 24,
+  },
   title: {
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "left",
     marginVertical: 15,
-    marginHorizontal: 16,
     color: "#333",
   },
   highlight: {
@@ -71,8 +77,8 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   section: { 
-    marginHorizontal: 15, 
     marginBottom: 15,
+    width: "100%",
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 12,

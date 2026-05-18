@@ -1,52 +1,100 @@
-import { ScrollView, Text, StyleSheet, View, TouchableOpacity, ImageBackground } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ImageBackground,
+  useWindowDimensions,
+} from "react-native";
 import CustomHeader from "@/components/CustomHeader";
+import ContentWidth from "@/components/ContentWidth";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Slider from "@react-native-community/slider";
 
-export default function Podcast() {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState<string | null>(null);
-  const [position, setPosition] = useState(0); // segundos actuales
-  const [duration, setDuration] = useState(1); // duración total en segundos
+const PODCASTS = [
+  {
+    id: "podcast1",
+    title: "Ser mamá, ser real",
+    uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929396/Audio1_tcphjt.mp3",
+  },
+  {
+    id: "podcast2",
+    title: "Lactando con papá",
+    uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929403/Audio2_permxt.mp3",
+  },
+  {
+    id: "podcast3",
+    title: "Brindando más que leche",
+    uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929395/Audio3_dkq4zo.mp3",
+  },
+] as const;
 
-  // Reproducir / Pausar
-  const handlePlayPause = async (id: string, source: any) => {
+export default function Podcast() {
+  const { width } = useWindowDimensions();
+  const cardHeight = Math.min(Math.max(width * 0.35, 160), 220);
+
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const soundRef = useRef<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState<string | null>(null);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(1);
+
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: true,
+    }).catch(console.error);
+
+    return () => {
+      soundRef.current?.unloadAsync().catch(console.error);
+    };
+  }, []);
+
+  const handlePlayPause = async (id: string, uri: string) => {
     try {
       if (isPlaying === id && sound) {
         await sound.pauseAsync();
         setIsPlaying(null);
-      } else {
-        if (sound) {
-          await sound.stopAsync();
-          await sound.unloadAsync();
-        }
-        const { sound: newSound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
-        setSound(newSound);
-        setIsPlaying(id);
-
-        // Escuchar actualizaciones de estado
-        newSound.setOnPlaybackStatusUpdate((status: any) => {
-          if (status.isLoaded) {
-            setPosition(status.positionMillis / 1000);
-            setDuration(status.durationMillis ? status.durationMillis / 1000 : 1);
-          }
-        });
+        return;
       }
+
+      if (sound) {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+        soundRef.current = null;
+      }
+
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri },
+        { shouldPlay: true }
+      );
+      soundRef.current = newSound;
+      setSound(newSound);
+      setIsPlaying(id);
+
+      newSound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded) {
+          setPosition(status.positionMillis / 1000);
+          setDuration(
+            status.durationMillis ? status.durationMillis / 1000 : 1
+          );
+        }
+      });
     } catch (error) {
       console.error("Error al reproducir audio:", error);
     }
   };
 
-  // Formato mm:ss
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  // Mover la barra
   const handleSeek = async (value: number) => {
     if (sound) {
       await sound.setPositionAsync(value * 1000);
@@ -54,162 +102,72 @@ export default function Podcast() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <CustomHeader />
 
-      {/* Título principal con el mismo estilo que las otras pantallas */}
-      <Text style={styles.title}>
-        <Text style={styles.highlight}>Podcast experiencias en madres universitarias</Text>
-      </Text>
+      <ContentWidth>
+        <Text style={styles.title}>
+          <Text style={styles.highlight}>
+            Podcast experiencias en madres universitarias
+          </Text>
+        </Text>
 
-      {/* Podcast 1 */}
-      <ImageBackground
-        source={require("@/assets/imagenes/madreUno.jpg")}
-        style={styles.podcastCard}
-        imageStyle={{ borderRadius: 12 }}
-      >
-        <View style={styles.overlay}>
-          <Text style={styles.podcastTitle}>Podcasts</Text>
-          <Text style={styles.podcastDescription}>Ser mamá, ser real</Text>
-
-          {/* Controles */}
-          <TouchableOpacity
-            style={styles.playButton}
-            onPress={() =>
-              handlePlayPause(
-                "podcast1",
-                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929396/Audio1_tcphjt.mp3" }
-              )
-            }
+        {PODCASTS.map((podcast) => (
+          <ImageBackground
+            key={podcast.id}
+            source={require("@/assets/imagenes/madreUno.jpg")}
+            style={[styles.podcastCard, { height: cardHeight }]}
+            imageStyle={{ borderRadius: 12 }}
           >
-            <Ionicons
-              name={isPlaying === "podcast1" ? "pause" : "play"}
-              size={28}
-              color="white"
-            />
-          </TouchableOpacity>
+            <View style={styles.overlay}>
+              <Text style={styles.podcastTitle}>Podcasts</Text>
+              <Text style={styles.podcastDescription}>{podcast.title}</Text>
 
-          {/* Barra + tiempo */}
-          {isPlaying === "podcast1" && (
-            <View style={styles.sliderContainer}>
-              <Text style={styles.time}>{formatTime(position)}</Text>
-              <Slider
-                style={{ flex: 1, marginHorizontal: 8 }}
-                minimumValue={0}
-                maximumValue={duration}
-                value={position}
-                onSlidingComplete={handleSeek}
-                minimumTrackTintColor="#fff"
-                maximumTrackTintColor="#aaa"
-                thumbTintColor="#fff"
-              />
-              <Text style={styles.time}>{formatTime(duration - position)}</Text>
+              <TouchableOpacity
+                style={styles.playButton}
+                onPress={() => handlePlayPause(podcast.id, podcast.uri)}
+              >
+                <Ionicons
+                  name={isPlaying === podcast.id ? "pause" : "play"}
+                  size={28}
+                  color="white"
+                />
+              </TouchableOpacity>
+
+              {isPlaying === podcast.id && (
+                <View style={styles.sliderContainer}>
+                  <Text style={styles.time}>{formatTime(position)}</Text>
+                  <Slider
+                    style={styles.slider}
+                    minimumValue={0}
+                    maximumValue={duration}
+                    value={position}
+                    onSlidingComplete={handleSeek}
+                    minimumTrackTintColor="#fff"
+                    maximumTrackTintColor="#aaa"
+                    thumbTintColor="#fff"
+                  />
+                  <Text style={styles.time}>
+                    {formatTime(duration - position)}
+                  </Text>
+                </View>
+              )}
             </View>
-          )}
-        </View>
-      </ImageBackground>
-
-      {/* Podcast 2 */}
-      <ImageBackground
-        source={require("@/assets/imagenes/madreUno.jpg")}
-        style={styles.podcastCard}
-        imageStyle={{ borderRadius: 12 }}
-      >
-        <View style={styles.overlay}>
-          <Text style={styles.podcastTitle}>Podcasts</Text>
-          <Text style={styles.podcastDescription}>Lactando con papá</Text>
-
-          {/* Botón Play/Pause */}
-          <TouchableOpacity
-            style={styles.playButton}
-            onPress={() =>
-              handlePlayPause(
-                "podcast2",
-                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929403/Audio2_permxt.mp3" }
-              )
-            }
-          >
-            <Ionicons
-              name={isPlaying === "podcast2" ? "pause" : "play"}
-              size={28}
-              color="white"
-            />
-          </TouchableOpacity>
-
-          {/* Barra + tiempo (misma lógica que podcast1) */}
-          {isPlaying === "podcast2" && (
-            <View style={styles.sliderContainer}>
-              <Text style={styles.time}>{formatTime(position)}</Text>
-              <Slider
-                style={{ flex: 1, marginHorizontal: 8 }}
-                minimumValue={0}
-                maximumValue={duration}
-                value={position}
-                onSlidingComplete={handleSeek}
-                minimumTrackTintColor="#fff"
-                maximumTrackTintColor="#aaa"
-                thumbTintColor="#fff"
-              />
-              <Text style={styles.time}>{formatTime(duration - position)}</Text>
-            </View>
-          )}
-        </View>
-      </ImageBackground>
-
-      {/* Podcast 3 */}
-      <ImageBackground
-        source={require("@/assets/imagenes/madreUno.jpg")}
-        style={styles.podcastCard}
-        imageStyle={{ borderRadius: 12 }}
-      >
-        <View style={styles.overlay}>
-          <Text style={styles.podcastTitle}>Podcasts</Text>
-          <Text style={styles.podcastDescription}>Brindando más que leche</Text>
-
-          {/* Botón Play/Pause */}
-          <TouchableOpacity
-            style={styles.playButton}
-            onPress={() =>
-              handlePlayPause(
-                "podcast3",
-                { uri: "https://res.cloudinary.com/dnecewfrp/video/upload/v1762929395/Audio3_dkq4zo.mp3" }
-              )
-            }
-          >
-            <Ionicons
-              name={isPlaying === "podcast3" ? "pause" : "play"}
-              size={28}
-              color="white"
-            />
-          </TouchableOpacity>
-
-          {/* Barra + tiempo (misma lógica que podcast1) */}
-          {isPlaying === "podcast3" && (
-            <View style={styles.sliderContainer}>
-              <Text style={styles.time}>{formatTime(position)}</Text>
-              <Slider
-                style={{ flex: 1, marginHorizontal: 8 }}
-                minimumValue={0}
-                maximumValue={duration}
-                value={position}
-                onSlidingComplete={handleSeek}
-                minimumTrackTintColor="#fff"
-                maximumTrackTintColor="#aaa"
-                thumbTintColor="#fff"
-              />
-              <Text style={styles.time}>{formatTime(duration - position)}</Text>
-            </View>
-          )}
-        </View>
-      </ImageBackground>
+          </ImageBackground>
+        ))}
+      </ContentWidth>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#fff" 
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 24,
   },
   title: {
     fontSize: 22,
@@ -217,22 +175,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 15,
     color: "#333",
+    width: "100%",
   },
   highlight: {
     color: "#5B0A59",
     textDecorationLine: "underline",
   },
   podcastCard: {
-    height: 180,
+    width: "100%",
     marginBottom: 18,
-    marginHorizontal: 15,
     justifyContent: "flex-end",
     borderRadius: 12,
     overflow: "hidden",
   },
   overlay: {
     backgroundColor: "rgba(91, 10, 90, 0.28)",
-    padding: 40,
+    padding: 24,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
   },
@@ -256,6 +214,11 @@ const styles = StyleSheet.create({
   sliderContainer: {
     flexDirection: "row",
     alignItems: "center",
+    width: "100%",
+  },
+  slider: {
+    flex: 1,
+    marginHorizontal: 8,
   },
   time: {
     color: "white",

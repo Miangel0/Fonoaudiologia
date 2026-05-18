@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import CustomHeader from "@/components/CustomHeader";
+import ContentWidth from "@/components/ContentWidth";
 import { supabase } from "@/lib/supabase";
 
 export default function Index() {
@@ -16,7 +17,7 @@ export default function Index() {
   // ✅ Cierre de sesión REAL
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.replace("/(auth)/signin");
+    router.replace("/signin");
   };
 
   // 🔥 ELIMINAR CUENTA (Apple obligatorio)
@@ -51,7 +52,7 @@ export default function Index() {
               );
 
               await supabase.auth.signOut();
-              router.replace("/(auth)/signin");
+              router.replace("/signin");
             } catch (error) {
               Alert.alert(
                 "Error",
@@ -69,6 +70,7 @@ export default function Index() {
       <CustomHeader />
 
       <ScrollView contentContainerStyle={styles.scroll}>
+        <ContentWidth>
         <Text style={styles.menuTitle}>MENÚ</Text>
 
         <View style={styles.menu}>
@@ -136,6 +138,7 @@ export default function Index() {
             <Text style={styles.deleteButtonText}>Eliminar cuenta</Text>
           </TouchableOpacity>
         </View>
+        </ContentWidth>
       </ScrollView>
     </View>
   );
@@ -149,6 +152,7 @@ const styles = StyleSheet.create({
   scroll: {
     padding: 20,
     alignItems: "center",
+    paddingBottom: 32,
   },
   menuTitle: {
     fontSize: 25,
